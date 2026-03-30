@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VigilEdge AI — Incident Dashboard</title>
+  <meta name="description" content="Post-trip incident analysis and fatigue event reports for VigilEdge AI monitoring sessions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body class="dashboard-body">
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <svg class="topbar-logo" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span class="topbar-brand">VigilEdge <span class="accent">AI</span></span>
+      <span class="topbar-version">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <a href="/" class="btn-dashboard">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Live Monitor
+      </a>
+    </div>
+  </header>
+
+  <!-- Dashboard Content -->
+  <main class="dash-main">
+    <!-- Summary Cards Row -->
+    <section class="dash-summary">
+      <div class="dash-card dash-stat-card">
+        <div class="dash-stat-icon" style="--c: var(--blue); --cg: var(--blue-glow);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="dash-stat-info">
+          <span class="dash-stat-value" id="dash-total-sessions">—</span>
+          <span class="dash-stat-label">Total Sessions</span>
+        </div>
+      </div>
+      <div class="dash-card dash-stat-card">
+        <div class="dash-stat-icon" style="--c: var(--red); --cg: var(--red-glow);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="dash-stat-info">
+          <span class="dash-stat-value" id="dash-total-events">—</span>
+          <span class="dash-stat-label">Total Events</span>
+        </div>
+      </div>
+      <div class="dash-card dash-stat-card">
+        <div class="dash-stat-icon" style="--c: var(--red); --cg: var(--red-glow);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </div>
+        <div class="dash-stat-info">
+          <span class="dash-stat-value" id="dash-micro-sleeps">—</span>
+          <span class="dash-stat-label">Micro-Sleeps</span>
+        </div>
+      </div>
+      <div class="dash-card dash-stat-card">
+        <div class="dash-stat-icon" style="--c: var(--amber); --cg: var(--amber-glow);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="dash-stat-info">
+          <span class="dash-stat-value" id="dash-yawns">—</span>
+          <span class="dash-stat-label">Yawns</span>
+        </div>
+      </div>
+      <div class="dash-card dash-stat-card">
+        <div class="dash-stat-icon" style="--c: #f43f5e; --cg: rgba(244,63,94,0.25);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="dash-stat-info">
+          <span class="dash-stat-value" id="dash-critical">—</span>
+          <span class="dash-stat-label">Critical Events</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column: Severity Breakdown + Sessions List -->
+    <section class="dash-grid-2">
+      <!-- Severity Breakdown -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h2>Severity Breakdown</h2>
+        </div>
+        <div class="dash-card-body">
+          <div class="severity-bars" id="severity-bars">
+            <div class="severity-bar-row">
+              <span class="severity-label critical">Critical</span>
+              <div class="severity-track"><div class="severity-fill" id="sev-critical" style="width:0%"></div></div>
+              <span class="severity-count" id="sev-critical-count">0</span>
+            </div>
+            <div class="severity-bar-row">
+              <span class="severity-label high">High</span>
+              <div class="severity-track"><div class="severity-fill" id="sev-high" style="width:0%"></div></div>
+              <span class="severity-count" id="sev-high-count">0</span>
+            </div>
+            <div class="severity-bar-row">
+              <span class="severity-label medium">Medium</span>
+              <div class="severity-track"><div class="severity-fill" id="sev-medium" style="width:0%"></div></div>
+              <span class="severity-count" id="sev-medium-count">0</span>
+            </div>
+            <div class="severity-bar-row">
+              <span class="severity-label low">Low</span>
+              <div class="severity-track"><div class="severity-fill" id="sev-low" style="width:0%"></div></div>
+              <span class="severity-count" id="sev-low-count">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sessions List -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h2>Recent Sessions</h2>
+        </div>
+        <div class="dash-card-body dash-sessions-list" id="sessions-list">
+          <div class="dash-empty">
+            <p>No sessions recorded yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Timeline -->
+    <section class="dash-card dash-full-width">
+      <div class="dash-card-header">
+        <h2>Event Timeline</h2>
+        <span class="badge" id="timeline-count">0</span>
+      </div>
+      <div class="dash-card-body dash-timeline" id="event-timeline">
+        <div class="dash-empty">
+          <p>No events recorded yet.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>
